@@ -105,15 +105,21 @@ namespace FileUploadSample
         private RelayCommand<string> _uploadFileCommand;
         public RelayCommand<string> UploadFileCommand => _uploadFileCommand ?? (_uploadFileCommand = new RelayCommand<string>(async args =>
         {
+            var (fileName, fileStream) = await PickFile();
+
+            if (string.IsNullOrEmpty(fileName) ||
+                fileStream == null)
+            {
+                return;
+            }
+
             Disabled = false;
-            if (this._userCredentials == null)
+            if (_userCredentials == null)
             {
                 await SignInUser();
             }
 
             DriveItem uploadedFile = null;
-
-            var (fileName, fileStream) = await PickFile();
             var button = args;
             if (button == "small")
             {
