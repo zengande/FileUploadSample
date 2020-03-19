@@ -1,0 +1,30 @@
+﻿<Window x:Class="FileUploadSample.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FileUploadSample"
+        mc:Ignorable="d"
+        Title="MainWindow" 
+        Height="450"
+        Width="800"
+        DataContext="{Binding Main, Source={StaticResource Locator}}">
+    <Grid>
+        <StackPanel HorizontalAlignment="Left">
+            <CheckBox x:Name="uploadToSharePointCheckBox" 
+                      Margin="10,10,10,10" 
+                      Content="Upload to SharePoint?"
+                      IsChecked="{Binding IsUploadToSharePoint}"/>
+            <Button x:Name="uploadSmallFileButton" 
+                    Command="{Binding UploadFileCommand}"
+                    CommandParameter="'small'"
+                    Margin="10,10,10,10">Upload small file</Button>
+            <Button x:Name="uploadLargeFileButton" 
+                    Margin="10,10,10,10" 
+                    Command="{Binding UploadFileCommand}">Upload large file</Button>
+            <TextBlock x:Name="statusTextBlock"
+                       Margin="10,10,10,10"
+                       Text="{Binding StatusText}"/>
+        </StackPanel>
+    </Grid>
+</Window>

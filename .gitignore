@@ -3,3 +3,5 @@
 ################################################################################
 
 /FileUploadSample/bin/Debug/netcoreapp3.1
+/FileUploadSample/obj
+/.vs/FileUploadSample
