@@ -1,4 +1,5 @@
-﻿using GalaSoft.MvvmLight;
+﻿using CommonServiceLocator;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Graph;
@@ -39,10 +40,12 @@ namespace FileUploadSample
     {
         public ViewModelLocator()
         {
+            ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
+
             SimpleIoc.Default.Register<MainViewModel>();
         }
 
-        public MainViewModel Main 
+        public MainViewModel Main
             => SimpleIoc.Default.GetInstance<MainViewModel>();
     }
 
@@ -55,6 +58,21 @@ namespace FileUploadSample
         private GraphServiceClient graphClient = null;
         private AuthenticationResult _userCredentials;
 
+        private bool _disabled = true;
+        public bool Disabled
+        {
+            get => _disabled;
+            set
+            {
+                if (value != _disabled)
+                {
+                    _disabled = value;
+                    RaisePropertyChanged(nameof(Disabled));
+
+                    UploadFileCommand.RaiseCanExecuteChanged();
+                }
+            }
+        }
 
         private string _statusText;
         public string StatusText
@@ -87,6 +105,7 @@ namespace FileUploadSample
         private RelayCommand<string> _uploadFileCommand;
         public RelayCommand<string> UploadFileCommand => _uploadFileCommand ?? (_uploadFileCommand = new RelayCommand<string>(async args =>
         {
+            Disabled = false;
             if (this._userCredentials == null)
             {
                 await SignInUser();
@@ -112,7 +131,9 @@ namespace FileUploadSample
             {
                 StatusText = "Upload failed";
             }
-        }));
+
+            Disabled = true;
+        }, _ => Disabled));
 
         private void InitializeGraph()
         {
